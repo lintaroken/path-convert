@@ -1,6 +1,9 @@
+'use strict';
+
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const { ipcMain, ipcRenderer } = require('electron');
 
 let mainWindow = null;
 app.on('ready', () => {
@@ -11,3 +14,4 @@ app.on('ready', () => {
     mainWindow = null;
   });
 });
+

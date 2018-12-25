@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./css/pure-min.css">
+    <script type="text/javascript" src="js/viewmain.js"></script>
     <title>PATHコンバータ</title>
   </head>
   <body>
@@ -10,13 +11,8 @@
       <input class="pure-input-1" type="text" id="windowsPath" placeholder="\\server\path\to\file (Windows path)">
       <input class="pure-input-1" type="text" id="mountURI" placeholder="smb://server/path (Mac mount URI)">
       <input class="pure-input-1" type="text" id="macPath" placeholder="/Volumes/MountPoint/path/to/file (Mac path)">
-      <button class="pure-button" id="windowsPathButton">Windows path from clipbord</button>
-      <button class="pure-button" id="settingButton">settings</button>
-    </form>
-    <form class="pure-form">
-      
-      <label for="domain"><input type="checkbox" id="domain">domain</label>
       <input class="pure-input-1" type="text" name="userName" placeholder="UserName">
+      <button class="pure-button" id="openButton">open</button>
     </form>
   </body>
 </html>
