@@ -18,11 +18,20 @@ window.addEventListener('DOMContentLoaded', function () {
     }
     const mountPoint = macPath.value.split('/')[2];
     exec(`mount | grep ${mountPoint} | awk '{print \$1}'`, function(err, stdout, stderr){
-      mountURI.value = 'smb:' + stdout;
-      windowsPath.value = stdout.replace(/^.*@/, '//').replace(/\//g, '\\')
+      mountURI.value = 'smb:' + decodeURIComponent(stdout);
+      windowsPath.value = decodeURIComponent(stdout).replace(/^.*@/, '//').replace(/\//g, '\\')
         + '\\' + macPath.value.split('/').slice(3).join('\\');
     });
   }  
+
+  function windowsPathInput() {
+    const server = windowsPath.value.split('\\')[2];
+    const topDir = windowsPath.value.split('\\')[3];
+    const otherPath = windowsPath.value.split('\\').slice(4).join('/');
+    const serverPrefix = userName.value ? userName.value + ':' : '';
+    mountURI.value = `smb://${serverPrefix}${server}/${topDir}`
+    macPath.value = `/Volumes/${topDir}/${otherPath}`
+  }
 
   document.addEventListener('drop', function (e) {
     e.preventDefault();
@@ -34,10 +43,17 @@ window.addEventListener('DOMContentLoaded', function () {
   
 
   macPath.addEventListener('input', macPathInput);
+  windowsPath.addEventListener('input', windowsPathInput);
+  userName.addEventListener('input', windowsPathInput);
 
   const openButton = document.getElementById('openButton');
   openButton.addEventListener('click', function () {
-    ipcRenderer.sendSync('message1', 'ping');
+    exec(`open ${macPath.value}`)
   });
+
+  exec('whoami', function (err, stdout, stderr) {
+    userName.value = stdout;
+  });
+
 });
 
