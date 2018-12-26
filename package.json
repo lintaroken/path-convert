@@ -1,14 +1,26 @@
 {
   "name": "path-convert",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Windowsの共有パスをMac用にコンバートする",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack:osx": "build --mac --x64"
   },
   "author": "lintaroken",
   "license": "MIT",
-  "dependencies": {
-    "electron": "^4.0.0"
+  "build": {
+    "appId": "com.woodses.pathconvert",
+    "mac": {
+      "target": "dmg"
+    },
+    "directories": {
+      "output": "out"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^4.0.0",
+    "electron-builder": "^20.38.4"
   }
 }
