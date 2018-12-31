@@ -3,7 +3,7 @@
 const { remote } = window.require('electron');
 const exec = remote.require('child_process').exec;
 
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', () => {
   const windowsPath = document.getElementById('windowsPath');
   const mountURI = document.getElementById('mountURI');
   const macPath = document.getElementById('macPath');
@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', function () {
       return;
     }
     const mountPoint = macPath.value.split('/')[2];
-    exec(`mount | grep ${mountPoint} | awk '{print \$1}'`, function(err, stdout, stderr){
+    exec(`mount | grep ${mountPoint} | awk '{print \$1}'`, (err, stdout, stderr) => {
       mountURI.value = 'smb:' + decodeURIComponent(stdout);
       windowsPath.value = decodeURIComponent(stdout).replace(/^.*@/, '//').replace(/\//g, '\\')
         + '\\' + macPath.value.split('/').slice(3).join('\\');
@@ -33,7 +33,7 @@ window.addEventListener('DOMContentLoaded', function () {
     macPath.value = `/Volumes/${topDir}/${otherPath}`
   }
 
-  document.addEventListener('drop', function (e) {
+  document.addEventListener('drop', (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     macPath.value = file.path;
@@ -47,11 +47,11 @@ window.addEventListener('DOMContentLoaded', function () {
   userName.addEventListener('input', windowsPathInput);
 
   const openButton = document.getElementById('openButton');
-  openButton.addEventListener('click', function () {
+  openButton.addEventListener('click', () => {
     exec(`open ${macPath.value}`)
   });
 
-  exec('whoami', function (err, stdout, stderr) {
+  exec('whoami', (err, stdout, stderr) => {
     userName.value = stdout;
   });
 
