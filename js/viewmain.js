@@ -9,6 +9,14 @@ window.addEventListener('DOMContentLoaded', () => {
   const macPath = document.getElementById('macPath');
   const userName = document.getElementById('userName');
 
+  function pathEscape(str) {
+    return str.replace(/ /g, '\\ ').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+  }
+
+  function pathUnescape(str) {
+    return str.replace(/\\ /g, ' ').replace(/\\\(/g, '(').replace(/\\\)/g, ')');
+  }
+
   function macPathInput() {
     const volumesIndex = macPath.value.indexOf('/Volumes')
     if (volumesIndex === -1) {
@@ -18,9 +26,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     const mountPoint = macPath.value.split('/')[2];
     exec(`mount | grep ${mountPoint} | awk '{print \$1}'`, (err, stdout, stderr) => {
-      mountURI.value = 'smb:' + decodeURIComponent(stdout);
+      mountURI.value = 'smb:' + decodeURIComponent(stdout).replace('@', ':');
       windowsPath.value = decodeURIComponent(stdout).replace(/^.*@/, '//').replace(/\//g, '\\')
-        + '\\' + macPath.value.split('/').slice(3).join('\\');
+        + '\\' + pathUnescape(macPath.value.split('/').slice(3).join('\\'));
     });
   }  
 
@@ -30,13 +38,13 @@ window.addEventListener('DOMContentLoaded', () => {
     const otherPath = windowsPath.value.split('\\').slice(4).join('/');
     const serverPrefix = userName.value ? userName.value + ':' : '';
     mountURI.value = `smb://${serverPrefix}${server}/${topDir}`
-    macPath.value = `/Volumes/${topDir}/${otherPath}`
+    macPath.value = `/Volumes/${topDir}/${pathEscape(otherPath)}`
   }
 
   document.addEventListener('drop', (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    macPath.value = file.path;
+    macPath.value = pathEscape(file.path);
     macPathInput();
     return false;
   });
